@@ -3,11 +3,9 @@ package com.gym.project.user.entity;
 import com.gym.project.entity.BaseEntity;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.time.LocalDateTime;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @ToString
-public class User extends BaseEntity{
+public class UserEntity extends BaseEntity{
 
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int userIndex;
@@ -29,15 +27,23 @@ public class User extends BaseEntity{
 
     private String gymName;
 
-    private String userRole;
-
     private String socialYN;
 
     private String userClass;
 
     private String phoneNumber;
 
-    private LocalDateTime userBirth;
+    private Date userBirth;
+
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    private Set<UserRole> userRoleSet;
+
+    public void addUserRole(UserRole userRole){
+        userRoleSet.add(userRole);
+    }
+
+
 
 
 
