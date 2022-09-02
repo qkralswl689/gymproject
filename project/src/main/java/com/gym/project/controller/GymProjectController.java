@@ -26,4 +26,14 @@ public class GymProjectController {
     public String Join(HttpSession session, Model model){
         return "html/join";
     }
+
+    @GetMapping("/class")
+    public String Class(HttpSession session, Model model){
+        return "html/class";
+    }
+
+    @GetMapping("/board")
+    public String Board(HttpSession session, Model model){
+        return "html/board";
+    }
 }

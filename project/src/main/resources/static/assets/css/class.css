@@ -1,0 +1,89 @@
+.container {
+    width: 80%;
+    height: 100vh;
+    margin: 0 auto;
+}
+
+.month {
+    height: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+/* arbitrary colours for display*/
+.day:nth-child(odd) {
+    background-color: aliceblue;
+}
+
+.day:nth-child(even) {
+    background-color: whtiesmoke;
+}
+
+/* Cards View */
+.day {
+    width: 100%;
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.day-number {
+    background-color: lightsteelblue;
+    padding: 2px 5px;
+    color: #555;
+    font-weight: bold;
+}
+
+
+/* List View*/
+@media (min-width: 640px) {
+    .day {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .day-number {
+        background: none;
+        width: 5%;
+    }
+
+    .day-event {
+        flex: 1;
+        padding: 0 5px;
+        text-align: center;
+    }
+
+    .day-location {
+        width: 25%;
+    }
+}
+
+/* Calendar View*/
+@media (min-width: 1024px) and (min-height: 540px) {
+    .day {
+        width: calc(100% / 7);
+        height: 25%;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .day-number,
+    .day-location {
+        width: 100%;
+    }
+
+    .day-number {
+        text-align: right;
+        padding: 0;
+    }
+
+    .day-event {
+        flex: 0 auto;
+        text-align: left;
+        padding: 0;
+    }
+
+}
