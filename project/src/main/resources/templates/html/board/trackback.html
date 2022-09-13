@@ -1,0 +1,42 @@
+<div class="feedbackList" id="trackback" cond="$oDocument->getTrackbackCount()">
+	<div class="feedbackHeader">{$lang->trackback} <em>'{$oDocument->getTrackbackCount()}'</em></div>
+	<div class="replyList trackbackList" cond="$oDocument->getTrackbackCount()">
+		<div class="item" id="trackback_{$val->trackback_srl}" loop="$oDocument->getTrackbacks()=>$key,$val">
+			<div class="itemContent">
+				<div class="xet-clearfix">
+					<div class="float-left">
+						<p class="trackbackURL"><a href="{$oDocument->getTrackbackUrl()}" onclick="return false;">{$oDocument->getTrackbackUrl()}</a></p>
+						<p class="meta">
+							{zdate($val->regdate, "Y.m.d H:i")} <span class="ip" cond="$grant->manager">{$val->ipaddress}</span>
+						</p>			
+						<p><a href="{$val->url}" onclick="winopen(this.href);return false;">{htmlspecialchars($val->title)} - {htmlspecialchars($val->blog_name)}</a></p>
+					</div>
+					<div class="float-right">
+						<p class="btn-wrp">
+							{$val->excerpt}&nbsp;
+							<a href="javascript:;" onclick="delTrackback('{$val->trackback_srl}');return false;"  class="{$btn} small" cond="$grant->manager"><i class="ti-trash"></i> <span>{$lang->cmd_delete}</span></a>	
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{@// 트랙백 삭제 boardModal}
+<div class="boardModal-form" id="boardModal-trackback-del" cond="$grant->write_comment && $oDocument->isEnableComment()">
+	<div class="boardModal-header">
+		{$lang->confirm_delete}			
+	</div>
+	<div class="boardModal-body">
+		<load target="../../tpl/filter/delete_trackback.xml" />		
+		<form action="./" method="get" onsubmit="return procFilter(this, delete_trackback)">
+			<input type="hidden" name="mid" value="{$mid}" />
+			<input type="hidden" name="page" value="{$page}" />
+			<input type="hidden" name="document_srl" value="{$document_srl}" />
+			<input type="hidden" name="trackback_srl" value="" />
+			<a href="javascript:;" class="boardModal-form-close {$btn} {$btn_size}">{$lang->cmd_cancel}</a>
+			<button type="submit" accesskey="s" class="{$btn} {$btn_size}">{$lang->cmd_delete}</button>
+		</form>
+	</div>
+</div>

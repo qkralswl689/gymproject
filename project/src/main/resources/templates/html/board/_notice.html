@@ -1,0 +1,22 @@
+<load target="css/_style_list.css" />
+
+<!--// 공지사항 출력 -->
+<table cellspacing="0" cellpadding="0" class="xet-listTable noticeTable">
+	<tbody>
+		<tr class="notice-item" loop="$notice_list=>$no,$document">			
+			<td class="cover-infoManager" cond="$grant->manager">
+				<input type="checkbox" name="cart" value="{$document->document_srl}" title="Check this" onclick="doAddDocumentCart(this)" checked="checked"|cond="$document->isCarted()" />
+			</td>				
+			<td>
+				<span cond="$document_srl==$document->document_srl">&raquo;</span>
+				<span class="notice-text" cond="$document_srl!=$document->document_srl">{$lang->notice}</span>
+			</td>
+			<td class="td-subject">
+				<a href="{getUrl('document_srl',$document->document_srl, 'listStyle', $listStyle, 'cpage','')}" class="subject">{$document->getTitle($module_info->subject_cut_size)}</a>
+				<a href="{getUrl('document_srl', $document->document_srl)}#comment" class="comment-icon" cond="$document->getCommentCount()"><i class="ti-comments" title="{$lang->comment}"></i>+{$document->getCommentCount()}</a>
+				<a href="{getUrl('document_srl', $document->document_srl)}#trackback" class="trackback-icon" cond="$document->getTrackbackCount()"><i class="ti-comments" title="{$lang->comment}"></i>+{$document->getTrackbackCount()}</a>
+				<include target="_icon.html" cond="$module_info->display_icon!='N'" />
+			</td>				
+		</tr>
+	</tbody>
+</table>

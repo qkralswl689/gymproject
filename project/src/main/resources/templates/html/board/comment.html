@@ -1,0 +1,225 @@
+
+<div class="feedbackList" id="comment">
+	<div class="feedbackHeader comment-icon" cond="$grant->write_comment && $oDocument->getCommentCount()">
+		<i class="ti-comments" title="{$lang->comment}"></i> <em>+{$oDocument->getCommentcount()}</em>
+	</div>
+
+	<!-- // 댓글 목록 -->
+	<div class="replyList">
+		<div class="item <!--@if($comment->get('depth'))-->itemReply<!--@end-->" id="comment_{$comment->comment_srl}" loop="$oDocument->getComments()=>$key,$comment" style="padding-left:{($comment->get('depth'))*15}px"|cond="$comment->get('depth')">
+			<div class="indent" >			
+				<div class="itemAside hidden-xs visible-sm">
+					<img src="{$comment->getProfileImage()}" alt="profile" class="profile" cond="$comment->getProfileImage()" />
+					<img src="img/common/noProfile.png" alt="profile" class="profile" cond="!$comment->getProfileImage()" />
+				</div>
+
+				<div class="itemContent">
+					<!--@if(!$comment->isAccessible())-->
+						<form action="./" method="get" onsubmit="return procFilter(this, input_password)" class="secretMessage boardWrite">
+							<input type="hidden" name="mid" value="{$mid}" />
+							<input type="hidden" name="page" value="{$page}" />
+							<input type="hidden" name="document_srl" value="{$comment->get('document_srl')}" />
+							<input type="hidden" name="comment_srl" value="{$comment->get('comment_srl')}" />
+							<p>{$lang->msg_is_secret}</p>
+							<p>
+								<input type="password" id="cpw" name="password" class="inputText" placeholder="{$lang->password}" required />
+								<input type="submit" value="{$lang->cmd_input}" class="{$btn} {$btn_size} {$btn_color}"/>
+							</p>
+						</form>
+					<!--@else-->
+					
+						<div class="xet-clearfix">
+							<div class="float-left">
+								<div class="meta mg-b10">
+									<span cond="$comment->is_secret=='Y'"><i class="ti-lock"></i></span>
+									<span>
+										<i class="ti-user" title="{$lang->author}"></i> 
+										<a href="{$comment->homepage}" onclick="window.open(this.href);return false;" cond="!$comment->member_srl && $comment->homepage">{$comment->getNickName()}</a>
+										<strong cond="!$comment->member_srl && !$comment->homepage">{$comment->getNickName()}</strong>
+										<a href="#popup_menu_area" class="member_{$comment->member_srl}" onclick="return false" cond="$comment->member_srl">{$comment->getNickName()}</a>
+										<!--@if($oDocument->variables['member_srl'] && ($comment->member_srl==$oDocument->variables['member_srl']))-->(작성자)<!--@end-->
+									</span>
+									<!-- // 추천표시 출력 -->
+									<!--@if($comment->get('voted_count')!=0 || $comment->get('blamed_count') != 0)-->
+									<span><i class="ti-heart" title="{$lang->voted_count}"></i> {$lang->cmd_vote}: {$comment->get('voted_count')?$comment->get('voted_count'):0}</span>
+									<span><i class="ti-heart-broken" title="{$lang->blamed_count}"></i> {$lang->cmd_vote_down}: {$comment->get('blamed_count')?$comment->get('blamed_count'):0}</span>
+									<!--@end-->
+								</div>		
+							</div>
+							<div class="float-right">
+								<div class="option-wrp">
+									<ul class="option">
+										<!--@if($is_logged)-->
+										<li cond="$comment_config->use_vote_up=='S' || $comment_config->use_vote_up!='N'">
+											<a href="javascript:;" onclick="doCallModuleAction('comment','procCommentVoteUp','{$comment->comment_srl}');return false;" class="{$btn} small <!--@if($oDocument->get('voted_count')>0)-->text-red<!--@end-->"><i class="ti-heart" alt="{$lang->cmd_vote}"></i> <span>{$comment->get('voted_count')?$comment->get('voted_count'):0}</span></a>
+										</li> 							
+										<li cond="$comment_config->use_vote_down=='S' || $comment_config->use_vote_down!='N'">
+											<a href="javascript:;" onclick="doCallModuleAction('comment','procCommentVoteDown','{$comment->comment_srl}');return false;" class="{$btn} small"><i class="ti-heart-broken" alt="{$lang->cmd_vote_down}"></i> <span>{$comment->get('blamed_count')?$comment->get('blamed_count'):0}</span></a>
+										</li>
+										<!--@end-->
+										<!--@if($comment->isGranted() || !$comment->get('member_srl'))-->
+										<li>
+											<a href="{getUrl('act','dispBoardModifyComment','comment_srl',$comment->comment_srl)}" class="{$btn} small"><i class="ti-eraser"></i> <span>{$lang->cmd_modify}</span></a>
+										</li>
+										<li>
+											<a href="javascript:;" onclick="delComment('{$comment->comment_srl}');return false;"  class="{$btn} small"><i class="ti-trash"></i> <span>{$lang->cmd_delete}</span></a>									
+										</li>
+										<!--@end-->
+									</ul>
+								</div>
+							</div>
+						</div>				
+						
+						<!-- // 댓글 출력 -->
+						{$comment->getContent(false)}
+						
+						<div class="meta mg-t10">
+							<span title="{$lang->regdate}">{$comment->getRegdate('Y.m.d H:i:s')}</span>
+							<span cond="$grant->manager">IP: {$comment->getIpaddress()}</span>
+							<span cond="$grant->write_comment && $oDocument->isEnableComment()">
+								<!--@if($module_info->re_comment_style=='simple')-->
+								<a href="javascript:;" onclick="reComment('{$comment->get('document_srl')}','{$comment->comment_srl}','{getUrl('act','dispBoardReplyComment','comment_srl',$comment->comment_srl)}','{$comment->getNickName()}');return false;"><i class="ti-plus"></i> 답글</a>
+								<!--@else-->
+								<a href="{getUrl('act','dispBoardReplyComment','comment_srl',$comment->comment_srl)}" alt="{$lang->cmd_reply}"><i class="ti-plus"></i> 답글</a>
+								<!--@end-->
+							</span>
+							<!--@if($is_logged)-->
+							<span><a href="#popup_menu_area" class="comment_{$comment->comment_srl}"><i class="ti-more-alt" alt="{$lang->cmd_comment_do}"></i></a></span>
+							<!--@end-->
+						</div>
+
+						<!-- // 첨부파일 출력 -->
+						<div class="attachedFileWrp" cond="$comment->hasUploadedFIles()">
+							<dl class="attachedFile">
+								<dt>
+									<i class="ti-files" title="{$lang->uploaded_file}"></i>
+									<button type="button" class="fileToggle" onclick="jQuery(this).parents('dl.attachedFile').toggleClass('open');return false;">{$lang->uploaded_file} ({$comment->get('uploaded_count')})</button>
+								</dt>
+								<dd>
+									<ul class="files">
+										{@ $_uploaded_files = $comment->getUploadedFiles() }
+										<!--@foreach($_uploaded_files as $key => $file)-->
+										<li><a href="{getUrl('')}{$file->download_url}">{$file->source_filename} <span class="bubble">[File Size:{FileHandler::filesize($file->file_size)}/Download{number_format($file->download_count)}]</span></a></li>
+										<!--@end-->
+									</ul>
+								</dd>
+							</dl>	
+						</div>
+
+					<!--@end-->
+
+				</div><!-- // itemContent end -->
+			</div><!-- // indent end -->
+		</div>
+	</div>
+	
+    <!-- // 댓글 페이지표시 -->
+    <ul class="boardPagination" cond="$oDocument->comment_page_navigation">
+        <li class="prevEnd"><a href="{getUrl('cpage',1)}#comment" title="{$lang->first_page}"><i class="ti-angle-left"></i> {$lang->first_page}</a></li>
+		<li loop="$page_no=$oDocument->comment_page_navigation->getNextPage()">
+			<strong class="page_on" cond="$cpage==$page_no">{$page_no}</strong>
+			<a href="{getUrl('cpage',$page_no)}#comment" cond="$cpage!=$page_no">{$page_no}</a>
+        </li>
+        <li class="nextEnd"><a href="{getUrl('cpage',$oDocument->comment_page_navigation->last_page)}#comment">{$lang->last_page} <i class="ti-angle-right"></i></a></li>
+    </ul>
+</div>
+
+{@// 댓글 삭제 boardModal}
+<div class="boardModal-form" id="boardModal-comment-del" cond="$grant->write_comment && $oDocument->isEnableComment()">
+	<div class="boardModal-header">
+		{$lang->confirm_delete}			
+	</div>
+	<div class="boardModal-body">
+		<load target="../../tpl/filter/delete_comment.xml" />								
+		<form action="./" method="get" onsubmit="return procFilter(this, delete_comment)">
+		   <input type="hidden" name="mid" value="{$mid}" />
+		   <input type="hidden" name="page" value="{$page}" />
+		   <input type="hidden" name="document_srl" value="{$document_srl}" />
+		   <input type="hidden" name="comment_srl" value="" />
+		   <a href="javascript:;" class="boardModal-form-close {$btn} {$btn_size}">{$lang->cmd_cancel}</a>
+		   <button type="submit" class="{$btn} {$btn_size}">{$lang->cmd_delete}</button>
+		</form>
+	</div>
+</div>
+	
+{@// 댓글폼}
+<div id="comment-form" cond="$grant->write_comment && $oDocument->isEnableComment()">
+	<form action="./" method="post" onsubmit="return procFilter(this, insert_comment)" class="boardWrite cmtWrite" cond="$grant->write_comment && $oDocument->isEnableComment()">
+		<input type="hidden" name="mid" value="{$mid}" />
+		<input type="hidden" name="document_srl" value="{$oDocument->document_srl}" />
+		<input type="hidden" name="comment_srl" value="" />
+		<input type="hidden" name="content" value="" />
+		<div class="boardEditor r6">
+			<div class="editorOption">				
+				<div class="write_type xet-clearfix">
+					<strong cond="$is_logged">{$logged_info->nick_name}</strong>
+					<div class="float-right">
+						<!--@if($is_logged)-->
+						<input type="checkbox" name="notify_message" value="Y" id="notify_message_{$oDocument->document_srl}" class="inputCheck" checked="checked"|cond="$module_info->notify_comment=='Y'" />
+						<label for="notify_message_{$oDocument->document_srl}" title="{$lang->notify}">{$lang->notify}</label>
+						<!--@end-->
+						<!--@if($module_info->secret=='Y')-->
+						<input type="checkbox" name="is_secret" value="Y" id="is_secret_{$oDocument->document_srl}" class="inputCheck" checked="checked"|cond="$module_info->secret_comment=='Y'" />
+						<label for="is_secret_{$oDocument->document_srl}"title="{$lang->secret}">{$lang->secret}</label>
+						<!--@end-->
+					</div>
+				</div>
+				<!--@if(!$is_logged)-->
+				<div class="write_type xet_clearfix">
+					<div class="input_form"><input type="text" name="nick_name" class="inputText userName" value=""  placeholder="{$lang->nick_name}" /></div>
+				</div>
+				<div class="write_type xet_clearfix">
+					<div class="input_form"><input type="password" name="password" class="inputText userPw" value=""  placeholder="{$lang->password}" /></div>
+				</div>
+				<!--@end-->
+			</div>
+			<div class="editor">{$oDocument->getCommentEditor()}</div>
+			<div class="text-right mg-t10">
+				<button type="submit" class="{$btn} {$btn_size} {$btn_submit}">{$lang->cmd_registration}</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+{@// 답글폼}
+<!--@if($module_info->re_comment_style=='simple')-->
+<div id="recomment-form" cond="$grant->write_comment && $oDocument->isEnableComment()">
+   	<form action="./" method="post" onsubmit="return procFilter(this, insert_comment)" class="boardWrite cmtWrite" cond="$grant->write_comment && $oDocument->isEnableComment()">
+		<input type="hidden" name="mid" value="{$mid}" />
+		<input type="hidden" name="document_srl" value="{$oDocument->document_srl}" />
+		<input type="hidden" name="parent_srl" value="" />
+		<input type="hidden" name="content"  id="re_com_content" value="" />
+		<input type="hidden" name="use_html" value="Y" />			
+		<div class="textarea">
+			<div class="mg-b10">
+				<div class="write_type xet_clearfix">
+					<strong class="nickName" cond="$is_logged">{$logged_info->nick_name}</strong>
+					<div class="float-right">
+						<!--@if($is_logged)-->
+						<input type="checkbox" name="notify_message" value="Y" checked="checked"|cond="$module_info->notify_comment=='Y'" id="notify_message" class="inputCheck" />
+						<label for="notify_message" title="{$lang->notify}">{$lang->notify}</label>
+						<!--@end-->
+						<!--@if($module_info->secret=='Y')-->
+						<input type="checkbox" name="is_secret" value="Y" id="is_secret" checked="checked"|cond="$module_info->secret_comment=='Y'" class="inputCheck" />
+						<label for="is_secret" title="{$lang->secret}">{$lang->secret}</label>
+						<!--@end-->
+					</div>
+				</div>
+				<!--@if(!$is_logged)-->
+				<div class="write_type xet_clearfix">
+					<div class="input_form"><input type="text" name="nick_name" class="inputText userName" value="" title="{$lang->author}" placeholder="{$lang->nick_name}" /></div>
+				</div>
+				<div class="write_type xet_clearfix">
+					<div class="input_form"><input type="password" name="password" class="inputText userPw" value="" title="{$lang->password}" placeholder="{$lang->password}" /></div>
+				</div>			
+				<!--@end-->
+			</div>
+			<textarea id="re_com_textarea"></textarea>
+			<div class="text-right mg-t10">
+				<a href="javascript:;" class="recomment-close {$btn} {$btn_size} {$btn_color}"> {$lang->cmd_cancel}</a>
+				<button type="submit" class="{$btn} {$btn_size} {$btn_submit}" onclick="convertbr2();">{$lang->cmd_registration}</button>
+			</div>
+		</div>
+   </form>    
+</div>
+<!--@end-->

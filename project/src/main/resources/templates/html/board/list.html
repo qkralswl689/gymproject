@@ -1,0 +1,174 @@
+<include target="header.html" />
+<!--@if(!$oDocument->isExists())-->		
+<div class="xet-boardHeader">			
+	{@//게시판 상단내용 출력}
+	<div class="boardHeaderText" cond="$module_info->header_text">{$module_info->header_text}</div>
+
+	{@//게시판 제목, 부제목, 설명}
+	<div class="mg-b30 <!--@if($module_info->board_title_align=='center')-->text-center<!--@end-->" cond="$module_info->title || $module_info->title_image || $module_info->comment">
+		<a href="{getUrl('','mid',$mid)}" class="boardTitle">
+			<!--@if($module_info->title_image)-->
+			<img src="{$module_info->title_image}" alt="{$module_info->title}" cond="$module_info->title_image" />
+			<!--@else-->
+			<!--@if($module_info->title)-->{$module_info->title}<!--@end-->
+			<!--@end-->
+		</a>
+		<div class="boardSubTitle" cond="$module_info->sub_title">{$module_info->sub_title}</div>
+		<div class="boardDesc" cond="$module_info->comment">{$module_info->comment}</div>
+	</div>
+</div>
+
+<div class="xet-clearfix boardHeaderCateWrp">
+	{@// 버튼들(쓰기,관리)}
+	<div class="float-right">
+		<a href="{getUrl('act','dispBoardWrite','document_srl','')}" class="{$btn} {$btn_size}" cond="$grant->write_document"><i class="ti-plus"></i> {$lang->cmd_write}</a>
+		<a href="{getUrl('','module','document','act','dispDocumentManageDocument')}" onclick="popopen(this.href,'manageDocument'); return false;" class="{$btn} {$btn_size}" cond="$grant->manager"><i class="ti-layers-alt"></i> {$lang->cmd_manage_document}</a>
+		<a href="{getUrl('act','dispBoardAdminBoardInfo')}" class="{$btn} {$btn_size}" target="_blank" cond="$grant->manager"><i class="ti-power-off"></i> {$lang->cmd_setup}</a>
+	</div>
+	
+	{@//카테고리출력}	
+	<div class="boardCategoryWrp category-dropdown <!--@if($module_info->use_sort=='Y')-->half-on<!--@end-->" cond="$module_info->use_category=='Y' && $module_info->category_style!='N'">			
+		<ul class="xet-clearfix">
+			<li>
+				<a href="javascript:;" data-toggle="category-dropdown" id="category-text">{$lang->all}</a>
+				<ul class="">
+					<li cond="$category"><a href="{getUrl('','mid',$mid,'listStyle',$listStyle)}">{$lang->all}</a></li>
+					<li loop="$category_list=>$key,$val" class="depth"|cond="$val->depth">
+						<input type="hidden" value="<!--@if($category)-->{$val->text}<!--@else-->{$lang->category}<!--@end-->" cond="$val->category_srl==$category" />
+						<a href="{getUrl('mid',$mid,'act','','page','','search_target','','search_keyword','','document_srl','','category',$val->category_srl)}" class="on"|cond="$val->category_srl==$category">{$val->title}</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</div>		
+
+	{@//정렬버튼(추천순,조회순...)}
+	<div class="boardCategoryWrp category-dropdown <!--@if($module_info->use_category=='Y' && $module_info->category_style!='N')-->half-on2<!--@end-->" cond="$module_info->use_sort=='Y'">
+		<ul class="xet-clearfix">
+			<li>
+				<a href="javascript:;" data-toggle="category-dropdown">
+					<!--@if($sort_index=='title')-->{$lang->title}<!--@elseif($sort_index=='regdate')-->{$lang->date}<!--@elseif($sort_index=='last_update')-->{$lang->last_update}<!--@elseif($sort_index=='last_post')-->{$lang->last_post}<!--@elseif($sort_index=='voted_count')-->{$lang->voted_count}<!--@elseif($sort_index=='readed_count')-->{$lang->readed_count}<!--@elseif($sort_index=='comment_count')-->{$lang->comment_count}<!--@else-->{$lang->regdate}<!--@end-->
+				</a>
+				<ul class="">
+					<li cond="$sort_index"><a href="{getUrl('','mid',$module_info->mid)}">{$lang->regdate}</a></li>
+					<li><a href="{getUrl('sort_index','title','order_type',$order_type)}" class="on"|cond="$sort_index=='title'">{$lang->title} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='title'" /></a></li>
+					<li><a href="{getUrl('sort_index','regdate','order_type',$order_type)}" class="on"|cond="$sort_index=='regdate'">{$lang->date} <img src="./img/common/{$order_icon}" alt="sort" class="sort"  cond="$sort_index=='regdate'" /></a></li>
+					<li><a href="{getUrl('sort_index','last_update','order_type',$order_type)}" class="on"|cond="$sort_index=='last_update'">{$lang->last_update} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='last_update'" /></a></li>
+					<li><a href="{getUrl('sort_index','last_post','order_type',$order_type)}" class="on"|cond="$sort_index=='last_post'">{$lang->last_post} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='last_post'" /></a></li>					
+					<li><a href="{getUrl('sort_index','readed_count','order_type',$order_type)}" class="on"|cond="$sort_index=='readed_count'">{$lang->readed_count} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='readed_count'" /></a></li>
+					<li><a href="{getUrl('sort_index','comment_count','order_type',$order_type)}" class="on"|cond="$sort_index=='comment_count'">{$lang->comment_count} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='comment_count'" /></a></li>
+					<li><a href="{getUrl('sort_index','voted_count','order_type',$order_type)}" class="on"|cond="$sort_index=='voted_count'">{$lang->voted_count} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='voted_count'" /></a></li>
+					<li cond="0"><a href="{getUrl('sort_index','blamed_count','order_type',$order_type)}" class="on"|cond="$sort_index=='blamed_count'">{$lang->blamed_count} <img src="./img/common/{$order_icon}" alt="sort" class="sort" cond="$sort_index=='blamed_count'" /></a></th>
+				</ul>
+			</li>
+		</ul>
+	</div>
+
+	{@//게시판 스타일선택}
+	<div class="boardCategoryWrp category-dropdown hidden-xs visible-sm" cond="$module_info->use_style=='Y'">
+		<ul class="xet-clearfix">
+			<li>
+				<a href="javascript:;" data-toggle="category-dropdown">
+					<!--@if($module_info->default_style=='gallery')-->갤러리형<!--@elseif($module_info->default_style=='webzine')-->웹진형<!--@elseif($module_info->default_style=='blog')-->블로그형<!--@elseif($listStyle=='list')-->목록형<!--@else-->스타일<!--@end-->
+				</a>
+				<ul class="">
+					<li cond="$module_info->default_style!='list'"><a href="{getUrl('listStyle','list','act','','document_srl','')}">목록형</a></li>						
+					<li cond="$module_info->default_style!='gallery'"><a href="{getUrl('listStyle','gallery','act','','document_srl','')}">갤러리형</a></li>
+					<li cond="$module_info->default_style!='webzine'"><a href="{getUrl('listStyle','webzine','act','','document_srl','')}">웹진형</a></li>
+					<li cond="$module_info->default_style!='blog'"><a href="{getUrl('listStyle','blog','act','','document_srl','')}">블로그형</a></li>
+				</ul>
+			</li>
+		</ul>
+	</div>	
+</div>
+<!--@elseif($oDocument->isExists() && $module_info->default_style!='blog')-->
+<include target="view_document.html" />
+<!--@end-->
+
+
+<!--@if(!$oDocument->isExists() || ($oDocument->isExists() && ($module_info->default_style=='blog' || $module_info->dp_list=='Y')))-->{@//본문하단 목록 출력여부 선택}
+	<!--@if(!$document_list && !$notice_list)-->
+	{@//등록된 글이 없을때}
+	<div class="no-item">{$lang->no_documents}</div>
+	<!--@else-->
+
+	<div id="ajax-boardContent">
+		<!--@if($module_info->default_style=='webzine')-->
+		<include target="_style.webzine.html" cond="$module_info->webzine_style!='B'" />
+		<include target="_style.webzine2.html" cond="$module_info->webzine_style=='B'" />
+		<!--@elseif($module_info->default_style=='gallery')-->
+		<include target="_style.gallery.html" cond="$module_info->gallery_style!='B'" />
+		<include target="_style.gallery2.html" cond="$module_info->gallery_style=='B'" />
+		<!--@elseif($module_info->default_style=='blog')-->
+		<include target="_style.blog.html" />
+		<!--@else-->
+		<include target="_style.list.html" />
+		<!--@end-->
+		{@//카테고리,검색시 글이 없을 때}
+		<div class="no-item" cond="!$document_list">{$lang->no_documents}</div>
+
+		{@//태그,내글보기 버튼}
+		<div class="xet-clearfix text-center mg-t15 hidden-xs visible-sm" cond="($is_logged && $module_info->display_mydoc=='Y') || $module_info->infoEtc == 'Y'">	
+			<div class="float-left" >		
+				<a href="{getUrl('mid',$mid,'search_target','user_id','search_keyword',$logged_info->user_id)}" class="{$btn} {$btn_size} {$btn_color}" cond="$is_logged && $module_info->display_mydoc=='Y'"><i class="xi-comment"></i> 내글보기</a>
+				<a href="{getUrl('act','dispBoardTagList')}" title="Tag List" class="{$btn} {$btn_size} {$btn_color}" cond="$module_info->infoEtc == 'Y'"><i class="xi-tags"></i> {$lang->tag}</a>
+			</div>
+		</div>	
+		
+		{@// 페이지네이션}		
+		<ul class="boardPagination" cond="($document_list || $notice_list) && ((!$document_srl && $module_info->default_style=='blog') || $module_info->display_pagination!='N')">			
+			<!--@if(!Mobile::isMobileCheckByAgent())-->
+				<!--@if($page>($module_info->page_count)/2+1)-->			
+				<li class="prevEnd" cond="$page != 1">
+					<a href="{getUrl('page','','document_srl','','division',$division,'last_division',$last_division,'listStyle',$listStyle)}" title="{$lang->first_page}">FIRST</a>
+				</li>
+				<li><strong>...</strong></li>
+				<!--@end-->
+				<li loop="$page_no=$page_navigation->getNextPage()">
+					<strong class="page_on" cond="$page==$page_no">{$page_no}</strong>
+					<a href="{getUrl('page',$page_no,'document_srl','','division',$division,'last_division',$last_division,'listStyle',$listStyle)}" cond="$page!=$page_no">{$page_no}</a>
+				</li>
+				<!--@if(($page+($module_info->page_count)/2<$page_navigation->last_page) && ($module_info->page_count+1<$page_navigation->last_page))-->
+				<li><strong>...</strong></li>
+				<li class="nextEnd" cond="$page != $page_navigation->last_page">
+					<a href="{getUrl('page',$page_navigation->last_page,'document_srl','','division',$division,'last_division',$last_division,'listStyle',$listStyle)}" title="{$lang->last_page}">LAST</a>
+				</li>
+				<!--@end-->
+			<!--@else-->
+				<li class="prevEnd">
+					<a href="<!--@if($page != 1)-->{getUrl('page',$page - 1,'document_srl','')}<!--@else-->{getUrl('page','','document_srl','','division',$division,'last_division',$last_division,'listStyle',$listStyle)}<!--@end-->" title="PREV" class="freeze"|cond="!$page || $page == 1"><i class="ti-angle-left"></i></a>
+				</li>
+				<li><strong class="page_mobile">{$page} / {$page_navigation->last_page}</strong></li>
+				<li class="nextEnd">
+					<a href="<!--@if($page != $page_navigation->last_page)-->{getUrl('page',$page + 1,'document_srl','')}<!--@else-->{getUrl('page',$page_navigation->last_page,'document_srl','','division',$division,'last_division',$last_division,'listStyle',$listStyle)}<!--@end-->" title="NEXT" class="freeze"|cond="$page==$page_navigation->last_page"><i class="ti-angle-right"></i></a>
+				</li>
+			<!--@end-->			
+		</ul>
+	</div>
+	
+	{@//검색폼}
+	<div class="boardSearch" cond="$grant->view && ((!$document_srl && $module_info->default_style=='blog') || $module_info->display_search!='N')">
+		<form action="{getUrl()}" method="get" onsubmit="return procFilter(this, search)" id="fo_search" class="boardSearchForm" no-error-return-url="true">
+			<input type="hidden" name="vid" value="{$vid}" />
+			<input type="hidden" name="mid" value="{$mid}" />
+			<input type="hidden" name="category" value="{$category}" />
+			<div class="boardSearchWrp">
+				<span class="search-target">
+					<select name="search_target">
+						<option value="{$key}" selected="selected"|cond="$search_target==$key" loop="$search_option=>$key,$val">{$val}</option>
+					</select>
+				</span>					
+				<input type="text" name="search_keyword" value="{htmlspecialchars($search_keyword)}" title="{$lang->cmd_search}" class="inputText" accesskey="S" placeholder="" />		
+				<span class="search-btn">
+					<button type="submit" onclick="jQuery(this).parents('form#fo_search').submit();return false;" alt="{$lang->cmd_search}" cond="!$last_division"></button>
+					<a href="{getUrl('page',1,'document_srl','','division',$last_division,'last_division','')}" cond="$last_division">{$lang->cmd_search_next}</a>
+					<a href="{getUrl('','mid',$mid,'listStyle',$listStyle)}" cond="!$device && $search_target">{$lang->cmd_cancel}</span></a>
+				</span>		
+			</div>
+		</form>
+	</div>
+	<!--@end-->
+<!--@end-->
+
+<include target="footer.html" />
+

@@ -1,0 +1,68 @@
+<include target="header.html" />
+<div class="xet-boardView">
+	<div class="feedbackList form mg-b10" cond="$oSourceComment->isExists()">
+		<div class="replyList">
+			<div class="item r3">
+				<div class="itemAside">
+					<img src="{$oSourceComment->getProfileImage()}" alt="profile" class="profile" cond="$oSourceComment->getProfileImage()" />
+					<img src="img/common/noProfile.png" alt="profile" class="profile" cond="!$oSourceComment->getProfileImage()" />
+				</div>
+				<div class="itemContent">
+					<div class="meta mg-b10">
+						<span>
+							<i class="ti-user" title="{$lang->author}"></i> 
+							<a href="#popup_menu_area" class="member_{$oSourceComment->getMemberSrl()}" onclick="return false">{$oSourceComment->getNickName()}</a>
+						</span>		
+					</div>
+					{$oSourceComment->getContent(false)}				
+					<div class="meta mg-t10">
+						<span>{$oSourceComment->getRegdate('Y.m.d H:i:s')}</span>
+						<span cond="$grant->manager">IP: {$oSourceComment->getIpaddress()}</span>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<form action="./" method="post" onsubmit="return procFilter(this, insert_comment)" class="boardWrite cmtWrite" >
+	<input type="hidden" name="mid" value="{$mid}" />
+	<input type="hidden" name="document_srl" value="{$oComment->get('document_srl')}" />
+	<input type="hidden" name="comment_srl" value="{$oComment->get('comment_srl')}" />
+	<input type="hidden" name="content" value="{htmlspecialchars($oComment->get('content'))}" />
+	<input type="hidden" name="parent_srl" value="{$oComment->get('parent_srl')}" />
+
+	<div class="boardEditor">
+		<div class="editorOption">
+			<!--@if(!$is_logged)-->
+			<div class="write_type xet_clearfix">
+				<div class="input_form"><input type="text" name="nick_name" class="inputText userName" value="{$oComment->get('nick_name')}" title="{$lang->author}" placeholder="{$lang->author}" /></div>
+			</div>
+			<div class="write_type xet_clearfix">
+				<div class="input_form"><input type="password" name="password" class="inputText userPw" value="{$lang->password}" title="{$lang->password}" placeholder="{$lang->password}" /></div>
+			</div>			
+			<!--@end-->
+			<div class="write_type xet-clearfix">
+				<strong cond="$is_logged">{$logged_info->nick_name}</strong>
+				<div class="float-right">
+					<!--@if($is_logged)-->
+					<input type="checkbox" name="notify_message" value="Y" checked="checked"|cond="$oComment->get('notify_message')=='Y'" id="notify_message" class="inputCheck" />
+					<label for="notify_message" title="{$lang->notify}">{$lang->notify}</label>
+					<!--@end-->
+					<!--@if($module_info->secret=='Y')-->
+					<input type="checkbox" name="is_secret" value="Y" id="is_secret" checked="checked"|cond="$oComment->get('is_secret')=='Y'" class="inputCheck" />
+					<label for="is_secret" title="{$lang->secret}">{$lang->secret}</label>
+					<!--@end-->
+				</div>
+			</div>
+		</div>
+		<div class="editor">{$oComment->getEditor()}</div>
+		<div class="text-right mg-t10">
+			<button type="button" onclick="location.href='{getUrl('act','')}'"  class="{$btn} {$btn_size} {$btn_color}">{$lang->cmd_cancel}</button>
+			<button type="submit" class="{$btn} {$btn_size} {$btn_submit}">{$lang->cmd_registration}</button>
+		</div>
+	</div>
+</form>
+
+<include target="footer.html" />
+
