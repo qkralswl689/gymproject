@@ -34,6 +34,6 @@ public class GymProjectController {
 
     @GetMapping("/board")
     public String Board(HttpSession session, Model model){
-        return "html/board";
+        return "html/tmp";
     }
 }
