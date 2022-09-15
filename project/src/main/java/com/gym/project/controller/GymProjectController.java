@@ -37,6 +37,10 @@ public class GymProjectController {
         return "html/tmp";
     }
 
+    @GetMapping("/list")
+    public String List(HttpSession session, Model model){
+        return "html/list";
+    }
     @GetMapping("/post")
     public String Post(HttpSession session, Model model){
         return "html/post";
