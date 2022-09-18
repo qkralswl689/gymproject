@@ -29,7 +29,6 @@ public class UserDTO {
 
     public UserEntity toEntity(){
         UserEntity build = UserEntity.builder()
-                .userIndex(userIndex)
                 .userEmail(userEmail)
                 .userPw(userPw)
                 .userName(userName)
