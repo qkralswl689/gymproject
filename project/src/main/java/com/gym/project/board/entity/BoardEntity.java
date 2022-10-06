@@ -1,5 +1,7 @@
 package com.gym.project.board.entity;
 
+import com.gym.project.file.entity.FileEntity;
+import com.gym.project.user.entity.UserEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +21,9 @@ public class BoardEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int boardIndex;
 
-
-    @Column(name = "userindex")
-    private int userIndex;
+    @ManyToOne
+    @JoinColumn(name = "userindex")
+    private UserEntity user;
 
     @Column(name = "fileindex")
     private int fileIndex;
@@ -41,17 +43,20 @@ public class BoardEntity {
      @Column(name = "reply")
      private int reply;
 
+     @OneToMany(mappedBy = "borderIndex")
+     private FileEntity file;
+
 
 
     @Builder
-    public BoardEntity(int boardIndex,int userIndex,String title,String content,String boardClass,int fileIndex,int view,int reply){
+    public BoardEntity(int boardIndex,UserEntity user,String title,String content,String boardClass,int fileIndex,int view,int reply){
         this.boardIndex = boardIndex;
         this.title = title;
         this.content = content;
         this.boardClass = boardClass;
         this.fileIndex = fileIndex;
         this.view = view;
-        this.userIndex = userIndex;
+        this.user = user;
         this.reply = reply;
     }
 

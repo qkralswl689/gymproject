@@ -1,11 +1,13 @@
 package com.gym.project.file.entity;
 
+import com.gym.project.board.entity.BoardEntity;
 import com.gym.project.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,6 +27,10 @@ public class FileEntity extends BaseEntity {
 
     @Column(name = "filepath")
     private String filePath; // 저장 및 불러올 경로
+
+    @ManyToOne
+    @JoinColumn(name = "boardindex")
+    private BoardEntity board;
 
 
     @Builder

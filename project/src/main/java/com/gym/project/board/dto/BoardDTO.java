@@ -2,6 +2,7 @@ package com.gym.project.board.dto;
 
 import com.gym.project.board.entity.BoardEntity;
 import com.gym.project.entity.BaseEntity;
+import com.gym.project.user.entity.UserEntity;
 import lombok.*;
 
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ public class BoardDTO extends BaseEntity {
 
     @Id
     private int boardIndex;
-    private int userIndex;
+    private UserEntity user;
     private int fileIndex;
     private String title;
     private String content;
@@ -29,7 +30,7 @@ public class BoardDTO extends BaseEntity {
                 .boardIndex(boardIndex)
                 .title(title)
                 .content(content)
-                .userIndex(userIndex)
+                .user(user)
                 .fileIndex(fileIndex)
                 .view(view)
                 .boardClass(boardClass)
@@ -40,9 +41,9 @@ public class BoardDTO extends BaseEntity {
     }
 
     @Builder
-    public BoardDTO(int boardIndex,int userIndex,int fileIndex,String title,String content,String boardClass,int view,int reply){
+    public BoardDTO(int boardIndex,UserEntity user,int fileIndex,String title,String content,String boardClass,int view,int reply){
         this.boardIndex = boardIndex;
-        this.userIndex = userIndex;
+        this.user = user;
         this.fileIndex = fileIndex;
         this.title = title;
         this.content = content;

@@ -1,10 +1,13 @@
 package com.gym.project.user.entity;
 
+import com.gym.project.board.entity.BoardEntity;
 import com.gym.project.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,8 +47,11 @@ public class UserEntity extends BaseEntity{
     @Column(name = "userbirth")
     private Date userBirth;
 
+    @OneToMany(mappedBy = "user")
+    private List<BoardEntity> boards = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
     private Set<UserRole> userRoleSet;
 
     public void addUserRole(UserRole userRole){
