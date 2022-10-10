@@ -19,14 +19,14 @@ public class BoardEntity {
     @Id
     @Column(name = "boardindex")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int boardIndex;
+    private Long boardIndex;
 
     @ManyToOne
     @JoinColumn(name = "userindex")
     private UserEntity user;
 
-    @Column(name = "fileindex")
-    private int fileIndex;
+//    @Column(name = "fileindex")
+//    private int fileIndex;
 
     @Column(name = "title")
     private String title;
@@ -43,18 +43,18 @@ public class BoardEntity {
      @Column(name = "reply")
      private int reply;
 
-     @OneToMany(mappedBy = "borderIndex")
+     @OneToMany(mappedBy = "board")
      private FileEntity file;
 
 
 
     @Builder
-    public BoardEntity(int boardIndex,UserEntity user,String title,String content,String boardClass,int fileIndex,int view,int reply){
+    public BoardEntity(Long boardIndex,UserEntity user,String title,String content,String boardClass,int fileIndex,int view,int reply){
         this.boardIndex = boardIndex;
         this.title = title;
         this.content = content;
         this.boardClass = boardClass;
-        this.fileIndex = fileIndex;
+        //this.fileIndex = fileIndex;
         this.view = view;
         this.user = user;
         this.reply = reply;

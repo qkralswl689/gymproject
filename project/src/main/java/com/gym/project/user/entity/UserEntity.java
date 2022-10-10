@@ -2,6 +2,7 @@ package com.gym.project.user.entity;
 
 import com.gym.project.board.entity.BoardEntity;
 import com.gym.project.entity.BaseEntity;
+import com.gym.project.gyminfo.entity.GymEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ public class UserEntity extends BaseEntity{
 
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "userindex")
-    private int userIndex;
+    private Long userIndex;
 
     @Id
     @Column(name = "useremail")
@@ -31,9 +32,6 @@ public class UserEntity extends BaseEntity{
 
     @Column(name = "username")
     private String userName;
-
-    @Column(name = "gymname")
-    private String gymName;
 
     @Column(name = "socialyn")
     private boolean socialYN;
@@ -49,6 +47,10 @@ public class UserEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "user")
     private List<BoardEntity> boards = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private List<GymEntity> gym = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Enumerated(EnumType.STRING)

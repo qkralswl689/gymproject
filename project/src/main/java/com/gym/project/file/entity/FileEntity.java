@@ -17,7 +17,7 @@ public class FileEntity extends BaseEntity {
     @Id
     @Column(name = "fileindex")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private int fileIndex; // 파일번호
+    private Long fileIndex; // 파일번호
 
     @Column(name = "filename")
     private String fileName; // 저장할때
@@ -34,7 +34,7 @@ public class FileEntity extends BaseEntity {
 
 
     @Builder
-    public FileEntity(int fileIndex, String fileName, String fileOriginName, String filePath){
+    public FileEntity(Long fileIndex, String fileName, String fileOriginName, String filePath){
         this.fileIndex = fileIndex;
         this.fileName = fileName;
         this.fileOriginName = fileOriginName;
