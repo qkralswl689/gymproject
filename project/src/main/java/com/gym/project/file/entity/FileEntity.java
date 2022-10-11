@@ -28,7 +28,7 @@ public class FileEntity extends BaseEntity {
     @Column(name = "filepath")
     private String filePath; // 저장 및 불러올 경로
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "boardindex")
     private BoardEntity board;
 

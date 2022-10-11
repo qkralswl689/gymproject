@@ -24,7 +24,7 @@ public class GymEntity {
 
     private String master;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "memberid")
     private List<MemberEntity> member = new ArrayList<>();
 

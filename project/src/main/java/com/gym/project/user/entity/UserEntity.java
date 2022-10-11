@@ -45,10 +45,10 @@ public class UserEntity extends BaseEntity{
     @Column(name = "userbirth")
     private Date userBirth;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<BoardEntity> boards = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "user")
     private List<GymEntity> gym = new ArrayList<>();
 

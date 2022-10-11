@@ -21,7 +21,7 @@ public class BoardEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long boardIndex;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userindex")
     private UserEntity user;
 
@@ -43,7 +43,7 @@ public class BoardEntity {
      @Column(name = "reply")
      private int reply;
 
-     @OneToMany(mappedBy = "board")
+     @OneToMany(mappedBy = "board",cascade = CascadeType.ALL)
      private FileEntity file;
 
 
